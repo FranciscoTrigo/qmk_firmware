@@ -24,7 +24,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
- * |Grave-Esc|   1  |   2  |   3  |   4  |   5  | LEFT |           | RIGHT|   6  |   7  |   8  |   9  |   0  |  -    |
+ * |Grave-Esc|   1  |   2  |   3  |   4  |   5  | Grave |           | RIGHT|   6  |   7  |   8  |   9  |   0  |  -    |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
  * | Tab    |   Q  |   W  |   E  |   R  |   T  | Home |           |  L1  |   Y  |   U  |   I  |   O  |   P  |   =    |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -32,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------| Alt  |           | Meh  |------+------+------+------+------+--------|
  * | LShift |  Z  |    X  |   C  |   V  |   B  | + Z  |           |      |   N  |   M  |   ,  |   .  |  /   | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |Wind| | ALT |AltShf| Left | Right|                                       |  [   |  ] |   [  |   ]  | ~L1  |
+ *   |Wind| | ALT |AltShf| Left | LEAD  |                                       |  [   |  ] |   [  |   ]  | \ |  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
  *                                        | Ins  | Del |       | Alt  |Ctrl/Esc|
@@ -44,11 +44,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [BASE] = LAYOUT_ergodox_pretty(
   // left hand
-  KC_GESC,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_LEFT,              KC_BSLS,      KC_6,    KC_7,    KC_8,    KC_9,              KC_0,           KC_MINS,
-  KC_TAB,          KC_Q,        KC_W,          KC_E,    KC_R,    KC_T,    LT(MDIA,KC_LEFT),             TG(SYMB),     KC_Y,    KC_U,    KC_I,    KC_O,              KC_P,           KC_EQUAL,
+  KC_GESC,          KC_1,        KC_2,          KC_3,    KC_4,    KC_5,    KC_GRAVE,              KC_BSLS,      KC_6,    KC_7,    KC_8,    KC_9,              KC_0,           KC_MINS,
+  KC_TAB,          KC_Q,        KC_W,          KC_E,    KC_R,    KC_T,    LT(MDIA,KC_LEFT),             KC_A,     KC_Y,    KC_U,    KC_I,    KC_O,              KC_P,           KC_EQUAL,
   KC_LCTRL,         KC_A,        KC_S,          KC_D,    KC_F,    KC_G,                                        KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
   KC_LSFT,         KC_Z, KC_X,          KC_C,    KC_V,    KC_B,    LALT(KC_Z),                  MEH_T(KC_NO), KC_N,    KC_M,    KC_COMM, KC_DOT,           KC_SLSH, KC_RSFT,
-  KC_LGUI, KC_LALT,     LALT(KC_LSFT), KC_LEFT, KC_RGHT,                                              KC_UP,   KC_DOWN, KC_LBRC, KC_RBRC, TT(SYMB),
+  KC_LGUI, KC_LALT,     LALT(KC_LSFT), KC_LEFT, KC_LEAD,                                              KC_LBRC,   KC_RBRC, KC_LBRC, KC_RBRC, KC_BSLS,
                                                            KC_INSERT, KC_DEL,                KC_LALT, CTL_T(KC_ESC),
                                                                           LT(MDIA,KC_HOME),                 KC_PGUP,
                                                          KC_BSPC, KC_SPC, LT(SYMB,KC_END),                  LT(MDIA,KC_PGDN), KC_SPC, KC_ENT
@@ -138,6 +138,50 @@ void keyboard_post_init_user(void) {
     rgblight_setrgb(RGBLIGHT_COLOR_LAYER_0);
 #endif
 };
+
+
+LEADER_EXTERNS();
+
+// Runs constantly in the background, in a loop.
+void matrix_scan_user(void) {
+    LEADER_DICTIONARY() {
+        leading = false;
+        leader_end();
+
+        SEQ_TWO_KEYS(KC_Y, KC_F) {
+            SEND_STRING("YamiFrankc");
+        }
+
+        SEQ_TWO_KEYS(KC_J, KC_A) {
+            SEND_STRING("jaja ");
+        }
+
+        SEQ_TWO_KEYS(KC_J, KC_E) {
+            SEND_STRING("jeje ");
+        }
+
+        SEQ_THREE_KEYS(KC_O, KC_O, KC_O) {
+            SEND_STRING("o.o ");
+        }
+
+        SEQ_ONE_KEY(KC_V) {
+            SEND_STRING(SS_LCTRL("v"));
+        }
+
+        SEQ_ONE_KEY(KC_C) {
+	    	SEND_STRING(SS_LCTRL("c"));
+		}
+
+		SEQ_ONE_KEY(KC_Q) {
+		     SEND_STRING(SS_LCTRL(SS_LALT("q")));
+		}
+
+
+    }
+    
+
+}
+
 
 // Runs whenever there is a layer state change.
 layer_state_t layer_state_set_user(layer_state_t state) {
